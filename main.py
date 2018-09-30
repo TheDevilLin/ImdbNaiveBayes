@@ -1,5 +1,6 @@
 import numpy as np
 import math
+import json
 
 
 class NaiveBayes(object):
@@ -15,6 +16,7 @@ class NaiveBayes(object):
         self.num_messages = {}
         self.log_class_priors = {}
         self.word_counts = {}
+        self.vocab = set(range(1, k+1, 1))
 
         self.num_messages['positive'] = sum(1 for label in y if label == 1)
         self.num_messages['negative'] = sum(1 for label in y if label == 0)
@@ -37,12 +39,12 @@ class NaiveBayes(object):
                 self.word_counts[c][word] += count
 
         if k:
-            self.word_counts["negative"] = {key: value for key, value in self.word_counts["negative"].items() if value <= k}
-            self.word_counts["positive"] = {key: value for key, value in self.word_counts["positive"].items() if value <= k}
+            self.word_counts["negative"] = {key: value for key, value in self.word_counts["negative"].items() if key <= k}
+            self.word_counts["positive"] = {key: value for key, value in self.word_counts["positive"].items() if key <= k}
 
-        temp_dict = self.word_counts["negative"].copy()
-        temp_dict.update(self.word_counts["positive"])
-        self.vocab = set(list(temp_dict.keys()))
+        # temp_dict = self.word_counts["negative"].copy()
+        # temp_dict.update(self.word_counts["positive"])
+        # self.vocab = set(list(temp_dict.keys()))
 
     def predict(self, X, y):
         result = []
@@ -114,6 +116,13 @@ if __name__ == '__main__':
     X_train = np.load('./imdb/x_train.npy')
     y_test = np.load('./imdb/y_test.npy')
     y_train = np.load('./imdb/y_train.npy')
+    # word_index_file = open('imdb_word_index.json')
+    # word_str = word_index_file.read()
+    # word_index = json.loads(word_str)
+    # word_index_dict = dict(word_index)
+    # word_index_sorted = { key: value for key, value in sorted(word_index_dict.items(), key=lambda item: (item[1], item[0]))}
+    # print(word_index_sorted)
+    # print(word_index_arr)
 
     NB = NaiveBayes()
 
@@ -126,8 +135,6 @@ if __name__ == '__main__':
     NB.fit(X_train, y_train, 10000)
     NB.predict(X_test, y_test)
 
-    NB.fit(X_train, y_train, 0)
-    NB.predict(X_test, y_test)
 
 
 
