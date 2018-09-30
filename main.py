@@ -1,6 +1,5 @@
 import numpy as np
 import math
-import json
 
 
 class NaiveBayes(object):
@@ -24,7 +23,6 @@ class NaiveBayes(object):
         n = len(X)
         self.log_class_priors['positive'] = math.log((self.num_messages['positive']) / n)
         self.log_class_priors['negative'] = math.log((self.num_messages['negative']) / n)
-
 
         self.word_counts['positive'] = {}
         self.word_counts['negative'] = {}
